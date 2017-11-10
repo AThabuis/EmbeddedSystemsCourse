@@ -36,9 +36,9 @@ ARCHITECTURE comp OF PWMPort IS
    signal   sPeriod:  std_logic_vector (7 DOWNTO 0);
    signal   sDutyCycle: std_logic_vector (7 DOWNTO 0);
    signal   sPolarity:  std_logic := '1';  -- High level polarity by default
-   signal   sCounterPWM: std_logic_vector (7 DOWNTO 0); -- See if sCounter has to be a signal or a variable
+   signal   sCounterPWM: std_logic_vector (7 DOWNTO 0) := X"00"; -- See if sCounter has to be a signal or a variable
 
-   signal   sCounterClk: std_logic_vector (15 DOWNTO 0); -- See if sCounter has to be a signal or a variable
+   signal   sCounterClk: std_logic_vector (15 DOWNTO 0) := X"00_00"; -- See if sCounter has to be a signal or a variable
    signal 	sUpperClockDivider: std_logic_vector(15 DOWNTO 0) := X"03_E8";
    signal 	sSlowClk: std_logic; -- Internal signal - To Enable the Slow module clock
 
@@ -47,14 +47,14 @@ BEGIN
 
   --   PWM output value
 	pPWM:
-	process(sEnablePWM,sSlowClk)
+	process(sEnablePWM,sSlowClk,Clk)
 	begin
-		if rising_edge(clk) and sEnablePWM = '1'  then
+		if rising_edge(Clk) and sEnablePWM = '1'  then
 			if sSlowClk = '1' then
 				if sCounterPWM < sPeriod then
 					sCounterPWM <= std_logic_vector( unsigned(sCounterPWM) + 1 );
 				else
-					sCounterPWM <= (others => '0');
+					sCounterPWM <= X"01";
 				end if;
 				if sCounterPWM < sDutyCycle then
 					PWMOut <= sPolarity;
@@ -71,12 +71,12 @@ BEGIN
 	process(Clk, nReset)
 	begin
 		if  nReset = '0' then
-			sCounterClk <= (others => '0');      -- reset counter when pressing reset
+			-- sCounterClk <= (others => '0');      -- reset counter when pressing reset
 			sEnablePWM <= '0';
 			sPolarity <= '1';
 			sDutyCycle <= (others => '0');    --   Input by default
 			sPeriod <= (others => '0');    --   Input by default
-			sCounterPWM <= (others => '0');
+			-- sCounterPWM <= (others => '0');
 			sUpperClockDivider <= (others => '0');    --   Input by default
 		elsif rising_edge(Clk) then
 			if ChipSelect = '1' and Write = '1' then --   Write cycle
@@ -102,10 +102,10 @@ BEGIN
 			ReadData <= (others => '0');  --   default value
 			if ChipSelect= '1' and Read = '1' then --   Read cycle 
 				case Address(2 downto 0) is 
-					when "000" => ReadData <= sEnablePWM; -- We take the LSB
+					when "000" => ReadData(0) <= sEnablePWM; -- We take the LSB
 					when "001" => ReadData <= sPeriod;
 					when "010" => ReadData <= sDutyCycle;
-					when "011" => ReadData <= sPolarity; -- We take the LSB
+					when "011" => ReadData(0) <= sPolarity; -- We take the LSB
 					when "100" => ReadData <= sUpperClockDivider(15 DOWNTO 8);
 					when "101" => ReadData <= sUpperClockDivider(7 DOWNTO 0);
 					when others => null; 

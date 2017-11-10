@@ -73,8 +73,9 @@ begin
 		end procedure reset_comp;
 
 		-- procedure to write to the registers
-		procedure write_register(write_address : std_logic_vector,
+		procedure write_register(write_address : std_logic_vector;
 								 write_data : std_logic_vector) is
+		begin
 			wait until rising_edge(Clk);
 			ChipSelect <= '1';
 			Write <= '1';
@@ -90,6 +91,7 @@ begin
 
 		--procedure to read from the registers
 		procedure read_register(read_address : std_logic_vector) is
+		begin
 			wait until rising_edge(Clk);
 			ChipSelect <= '1';
 			Read <= '1';
@@ -104,10 +106,10 @@ begin
 	begin
 		--reset the system
 		reset_comp;
-
+		
 		write_register("000",X"01"); -- enable the PWM
-		write_register("100",X"E8"); -- set the divider to 1000
-		write_register("101",X"03");
+		write_register("100",X"00"); -- set the divider to 1000
+		write_register("101",X"0A");
 		write_register("011",X"01"); -- set the polarity to 1
 
 		write_register("001",X"14"); -- set the period to 20 slow clock ticks
@@ -127,7 +129,8 @@ begin
 
 		wait for 1000 * 20 * CLK_PERIOD; -- wait for 1 period of the PWM
 
-		reset_comp; -- reset
+		-- reset_comp; -- reset
+		wait;
 	end process test;
 
 end architecture tb;
