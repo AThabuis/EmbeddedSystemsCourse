@@ -92,9 +92,30 @@ BEGIN
 			end if;
 		end if;
 	end process pRegWr;
+	
+	
+	--   Read Process to registers
+	pRegRd: 
+	process(Clk)
+	begin 
+		if  rising_edge(Clk) then 
+			ReadData <= (others => '0');  --   default value
+			if ChipSelect= '1' and Read = '1' then --   Read cycle 
+				case Address(2 downto 0) is 
+					when "000" => ReadData <= sEnablePWM; -- We take the LSB
+					when "001" => ReadData <= sPeriod;
+					when "010" => ReadData <= sDutyCycle;
+					when "011" => ReadData <= sPolarity; -- We take the LSB
+					when "100" => ReadData <= sUpperClockDivider(15 DOWNTO 8);
+					when "101" => ReadData <= sUpperClockDivider(7 DOWNTO 0);
+					when others => null; 
+				end case;
+			end if; 
+		end if; 
+	end process pRegRd; 
 
-
-
+	
+	  --	Process Clock Divider 
 	ClkDivider:
     process(Clk)
     begin
@@ -110,6 +131,6 @@ BEGIN
             end if;
         end if;
     end process ClkDivider;
-
-
+	
+	
 END comp;
