@@ -2,12 +2,12 @@
 --
 -- PWM with programmable period, duty cycle and polarity
 --
--- ~ address :
--- 0x00 Enabling of the PWM
--- 0x01 Period
--- 0x02 Duty Cycle
--- 0x03 Polarity
--- 0x04 Clock divider upper counter limit (on 2 adresses)
+-- 5 address :
+-- 00 Enabling of the PWM
+-- 01 Period
+-- 02 Duty Cycle
+-- 03 Polarity
+-- 04 Clock divider upper counter limit (on 2 adresses)
 
 library ieee;
 use ieee.std_logic_1164.all;
@@ -38,7 +38,7 @@ ARCHITECTURE comp OF PWMPort IS
    signal   sPolarity:  std_logic := '1';  -- High level polarity by default
    signal   sCounterPWM: std_logic_vector (7 DOWNTO 0); -- See if sCounter has to be a signal or a variable
 
-   signal   sCounterClk: std_logic_vector (15 DOWNTO 0); -- See if sCounter has to be a signal or a variable  
+   signal   sCounterClk: std_logic_vector (15 DOWNTO 0); -- See if sCounter has to be a signal or a variable
    signal 	sUpperClockDivider: std_logic_vector(15 DOWNTO 0) := X"03_E8";
    signal 	sSlowClk: std_logic; -- Internal signal - To Enable the Slow module clock
 
@@ -58,7 +58,7 @@ BEGIN
 				end if;
 				if sCounterPWM < sDutyCycle then
 					PWMOut <= sPolarity;
-				else 
+				else
 					PWMOut <= not sPolarity;
 				end if;
 			end if;
