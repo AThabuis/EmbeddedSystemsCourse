@@ -32,15 +32,15 @@ End PWMPort;
 
 ARCHITECTURE comp OF PWMPort IS
  --   signals for register access
-   signal	sEnablePWM: std_logic;-- := '0'; -- PWM module desactivated by default
+   signal	sEnablePWM: std_logic;
    signal   sPeriod:  std_logic_vector (7 DOWNTO 0);
    signal   sDutyCycle: std_logic_vector (7 DOWNTO 0);
-   signal   sPolarity:  std_logic;-- := '1';  -- High level polarity by default
-   signal   sCounterPWM: std_logic_vector (7 DOWNTO 0);-- := X"00"; -- See if sCounter has to be a signal or a variable
+   signal   sPolarity:  std_logic;
+   signal   sCounterPWM: std_logic_vector (7 DOWNTO 0);
 
-   signal   sCounterClk: std_logic_vector (15 DOWNTO 0);-- := X"00_00"; -- See if sCounter has to be a signal or a variable
-   signal 	sUpperClockDivider: std_logic_vector(15 DOWNTO 0);-- := X"03_E8";
-   signal 	sSlowClk: std_logic; -- Internal signal - To Enable the Slow module clock
+   signal   sCounterClk: std_logic_vector (15 DOWNTO 0);
+   signal 	sUpperClockDivider: std_logic_vector(15 DOWNTO 0);
+   signal 	sSlowClk: std_logic; -- Internal signal
 
 
 BEGIN
@@ -71,12 +71,10 @@ BEGIN
 	process(Clk, nReset)
 	begin
 		if  nReset = '0' then
-			-- sCounterClk <= (others => '0');      -- reset counter when pressing reset
 			sEnablePWM <= '0';
 			sPolarity <= '1';
 			sDutyCycle <= (others => '0');    --   Input by default
 			sPeriod <= (others => '0');    --   Input by default
-			-- sCounterPWM <= (others => '0');
 			sUpperClockDivider <= (others => '0');    --   Input by default
 		elsif rising_edge(Clk) then
 			if ChipSelect = '1' and Write = '1' then --   Write cycle
@@ -92,30 +90,30 @@ BEGIN
 			end if;
 		end if;
 	end process pRegWr;
-	
-	
+
+
 	--   Read Process to registers
-	pRegRd: 
+	pRegRd:
 	process(Clk)
-	begin 
-		if  rising_edge(Clk) then 
+	begin
+		if  rising_edge(Clk) then
 			ReadData <= (others => '0');  --   default value
-			if ChipSelect= '1' and Read = '1' then --   Read cycle 
-				case Address(2 downto 0) is 
+			if ChipSelect= '1' and Read = '1' then --   Read cycle
+				case Address(2 downto 0) is
 					when "000" => ReadData(0) <= sEnablePWM; -- We take the LSB
 					when "001" => ReadData <= sPeriod;
 					when "010" => ReadData <= sDutyCycle;
 					when "011" => ReadData(0) <= sPolarity; -- We take the LSB
 					when "100" => ReadData <= sUpperClockDivider(15 DOWNTO 8);
 					when "101" => ReadData <= sUpperClockDivider(7 DOWNTO 0);
-					when others => null; 
+					when others => null;
 				end case;
-			end if; 
-		end if; 
-	end process pRegRd; 
+			end if;
+		end if;
+	end process pRegRd;
 
-	
-	  --	Process Clock Divider 
+
+	  --	Process Clock Divider
 	ClkDivider:
     process(Clk,sEnablePWM)
     begin
@@ -131,6 +129,6 @@ BEGIN
             end if;
         end if;
     end process ClkDivider;
-	
-	
+
+
 END comp;

@@ -70,14 +70,13 @@ int main(void)
 	while(1)
 	{
 
-
         read_debugg1 = IORD_8DIRECT(PWMPORT_0_BASE, ENABLE_PWM_ADDR);
         read_debugg2 = IORD_8DIRECT(PWMPORT_0_BASE, PERIOD_ADDR);
         read_debugg3 = IORD_8DIRECT(PWMPORT_0_BASE, DUTY_CYCLE_ADDR);
         read_debugg4 = IORD_8DIRECT(PWMPORT_0_BASE, POLARITY_ADDR);
 
-        printf("Enable = %d, Period = %d, DutyCycle = %d, Polarity = %d\n", read_debugg1, read_debugg2, read_debugg3, read_debugg4);
-
+        printf("Enable = %d, Period = %d, DutyCycle = %d, Polarity = %d\n",
+                read_debugg1, read_debugg2, read_debugg3, read_debugg4);
 
         setClockDivider(CLK_DIVIDER);
         periodInTicks = setPeriod(2,CLK_DIVIDER);
@@ -101,6 +100,7 @@ int main(void)
         periodInTicks = setPeriod(2,CLK_DIVIDER);
         setDutyCycle(75,periodInTicks);
         setPolarity(ACTIVE_LOW);
+
         usleep(ONE_SECOND);
 
     }
