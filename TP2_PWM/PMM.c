@@ -33,6 +33,7 @@ void disablePWM(void){
 void setClockDivider(int divider){
 
     int MSB = divider & 0xFF00; // get the first 8 most significant bits
+    MSB = MSB >> 8;
     int LSB = divider & 0x00FF; // get the 8 least significant bits
     IOWR_8DIRECT(PWM_MODULE_0_BASE, CLK_DIVIDER_MSB_ADDR, MSB);
     IOWR_8DIRECT(PWM_MODULE_0_BASE, CLK_DIVIDER_LSB_ADDR, LSB);
