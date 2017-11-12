@@ -1,19 +1,3 @@
--- Authors : Antoine Laurens, Adrien Thabuis, Hugo Viard
---
--- test bench for the PWM module
---
---  Processes :
---	Process to generate the clock
---	Process to test the component
---
---  Procedures:
---	Reset the PWM module
---	Write a register
---	Read a register
---
---  Testing:
---	Writing to the registers and setting the period, duty cycle and the polarity
-
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
@@ -23,7 +7,6 @@ end testBench;
 
 architecture tb of testBench is
 
--- add the component we are testing
 component PWMPort is
 	PORT(
 		Clk : IN std_logic;
@@ -40,7 +23,7 @@ component PWMPort is
    );
 end component;
 
-	constant CLK_PERIOD : TIME := 20 ns;	-- 50 MHz clock
+	constant CLK_PERIOD : TIME := 20 ns;	-- 50 MHz
 
 	signal Clk : std_logic := '0';
 	signal nReset : std_logic := '1';
@@ -123,14 +106,16 @@ begin
 	begin
 		--reset the system
 		reset_comp;
-
+		
 		write_register("000",X"01"); -- enable the PWM
-		write_register("100",X"03"); -- set the divider to 1000
-		write_register("101",X"E8");
+		write_register("100",X"00"); -- set the divider to 1000
+		write_register("101",X"0A");
 		write_register("011",X"01"); -- set the polarity to 1
 
 		write_register("001",X"14"); -- set the period to 20 slow clock ticks
 		write_register("010",X"02"); -- set the duty cycle to 10%
+		
+		read_register("000");
 
 		wait for 1000 * 20 * CLK_PERIOD; -- wait for 1 period of the PWM
 
@@ -144,6 +129,9 @@ begin
 
 		write_register("011",X"00"); -- set the polarity to 2
 
+		wait for 1000 * 20 * CLK_PERIOD; -- wait for 1 period of the PWM
+
+		-- reset_comp; -- reset
 		wait;
 	end process test;
 
