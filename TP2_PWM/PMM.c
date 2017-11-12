@@ -59,8 +59,6 @@ int main(void)
     int periodInTicks = 0;
     enablePWM();
 
-    usleep(1000*1000); //Wait for 1 s
-
     while(1)
     {
         setClockDivider(CLK_DIVIDER);
