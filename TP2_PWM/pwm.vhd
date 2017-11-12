@@ -2,7 +2,7 @@
 --
 -- PWM with programmable period, duty cycle and polarity
 --
--- 5 address :
+-- 6 address :
 -- 000 Enabling of the PWM
 -- 001 Period
 -- 010 Duty Cycle
@@ -52,7 +52,7 @@ BEGIN
 		if rising_edge(Clk) and sEnablePWM = '1'  then
 			if sSlowClk = '1' then -- check if we have a slow clock tic
 				-- wrap around counter
-				if sCounterPWM < sPeriod then 
+				if sCounterPWM < sPeriod then
 					sCounterPWM <= std_logic_vector( unsigned(sCounterPWM) + 1 );
 				else
 					sCounterPWM <= X"00";

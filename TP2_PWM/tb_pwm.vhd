@@ -7,9 +7,10 @@
 --	Process to test the component
 --
 --  Procedures:
---	Procedure to reset the PWM module
---	Procedure to write a register
---	Procedure to read a register
+--	Reset the PWM module
+--	Write a register
+--	Read a register
+--
 --  Testing:
 --	Writing to the registers and setting the period, duty cycle and the polarity
 
@@ -124,8 +125,8 @@ begin
 		reset_comp;
 
 		write_register("000",X"01"); -- enable the PWM
-		write_register("100",X"00"); -- set the divider to 1000
-		write_register("101",X"0A");
+		write_register("100",X"03"); -- set the divider to 1000
+		write_register("101",X"E8");
 		write_register("011",X"01"); -- set the polarity to 1
 
 		write_register("001",X"14"); -- set the period to 20 slow clock ticks
