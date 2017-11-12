@@ -20,6 +20,7 @@
 #define CLK_DIVIDER 1000
 #define ACTIVE_LOW 0
 #define ACTIVE_HIGH 1
+#define ONE_SECOND 1000000
 
 void enablePWM(void){
     IOWR_8DIRECT(PWM_MODULE_0_BASE, ENABLE_PWM_ADDR, 0x01);
@@ -66,25 +67,25 @@ int main(void)
         setDutyCycle(25,periodInTicks);
         setPolarity(ACTIVE_HIGH);
 
-        usleep(1000*1000); //Wait for 1 s
+        usleep(ONE_SECOND);
 
         periodInTicks = setPeriod(2,CLK_DIVIDER);
         setDutyCycle(50,periodInTicks);
         setPolarity(ACTIVE_HIGH);
 
-        usleep(1000*1000);
+        usleep(ONE_SECOND);
 
         periodInTicks = setPeriod(20,CLK_DIVIDER);
         setDutyCycle(75,periodInTicks);
         setPolarity(ACTIVE_HIGH);
 
-        usleep(1000*1000);
+        usleep(ONE_SECOND);
 
         periodInTicks = setPeriod(20,CLK_DIVIDER);
         setDutyCycle(75,periodInTicks);
         setPolarity(ACTIVE_LOW);
 
-        usleep(1000*1000);
+        usleep(ONE_SECOND);
 
     }
 }
