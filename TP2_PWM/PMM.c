@@ -55,16 +55,21 @@ void setPolarity(int polarity){
 
 int main(void)
 {
-    setClockDivider(CLK_DIVIDER);
-    int periodInTicks = setPeriod(20,CLK_DIVIDER);
-    setDutyCycle(25,periodInTicks);
-    setPolarity(ACTIVE_HIGH);
+
+    int periodInTicks = 0;
     enablePWM();
 
     usleep(1000*1000); //Wait for 1 s
 
     while(1)
     {
+        setClockDivider(CLK_DIVIDER);
+        int periodInTicks = setPeriod(20,CLK_DIVIDER);
+        setDutyCycle(25,periodInTicks);
+        setPolarity(ACTIVE_HIGH);
+
+        usleep(1000*1000); //Wait for 1 s
+
         periodInTicks = setPeriod(2,CLK_DIVIDER);
         setDutyCycle(50,periodInTicks);
         setPolarity(ACTIVE_HIGH);
