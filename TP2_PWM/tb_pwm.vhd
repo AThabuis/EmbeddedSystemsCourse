@@ -1,3 +1,17 @@
+-- Authors : Antoine Laurens, Adrien Thabuis, Hugo Viard
+--
+-- Test bench to test the PWM module
+
+-- 2 Processes:
+-- clk generation process: To generate a clock of 50 MHz similart to the one on
+-- on the borad
+-- the test processes in which there are 3 procedures to test the module
+--
+-- 3 Procedures
+-- write_register
+-- read_register
+-- reset_comp 
+
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
@@ -106,7 +120,7 @@ begin
 	begin
 		--reset the system
 		reset_comp;
-		
+
 		write_register("000",X"01"); -- enable the PWM
 		write_register("100",X"00"); -- set the divider to 1000
 		write_register("101",X"0A");
@@ -114,7 +128,7 @@ begin
 
 		write_register("001",X"14"); -- set the period to 20 slow clock ticks
 		write_register("010",X"02"); -- set the duty cycle to 10%
-		
+
 		read_register("000");
 
 		wait for 1000 * 20 * CLK_PERIOD; -- wait for 1 period of the PWM
