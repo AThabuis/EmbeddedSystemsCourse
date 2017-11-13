@@ -7,7 +7,6 @@
 #include <unistd.h>
 #include "system.h"
 #include "io.h"
-//#include "altera_avalon_pio_regs.h"
 
 // adresses to write to
 #define ENABLE_PWM_ADDR 0//0b000
@@ -33,11 +32,11 @@ void disablePWM(void){
     IOWR_8DIRECT(PWMPORT_0_BASE, ENABLE_PWM_ADDR, 0x00);
 }
 
-void setClockDivider(int divider){
+void setClockDivider(int division_factor){
 
-    int MSB = divider & 0xFF00; // get the first 8 most significant bits
-    MSB = MSB >> 8;
-    int LSB = divider & 0x00FF; // get the 8 least significant bits
+    int MSB = division_factor & 0xFF00; // get the first 8 most significant bits
+    MSB = MSB >> 8; // put the bits in the LSB to write to the register
+    int LSB = division_factor & 0x00FF; // get the 8 least significant bits
     IOWR_8DIRECT(PWMPORT_0_BASE, CLK_DIVIDER_MSB_ADDR, MSB);
     IOWR_8DIRECT(PWMPORT_0_BASE, CLK_DIVIDER_LSB_ADDR, LSB);
 }
