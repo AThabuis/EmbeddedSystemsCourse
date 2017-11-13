@@ -2,6 +2,7 @@
 --
 -- PWM with programmable period, duty cycle and polarity
 --
+--
 -- 5 address :
 -- 00 Enabling of the PWM
 -- 01 Period
